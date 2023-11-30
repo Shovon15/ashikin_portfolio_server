@@ -1,5 +1,5 @@
 const express = require("express");
-const { userLogin, getUserById, userProfile } = require("../controllers/userController");
+const { userLogin, getUserById, userProfile, users } = require("../controllers/userController");
 const User = require("../models/userModel");
 const { verify } = require("jsonwebtoken");
 const { jwtActivationKey } = require("../secret");
@@ -28,6 +28,7 @@ const userRouter = express.Router();
 // userRouter.get("/:id", getUserById);
 userRouter.post("/login", userLogin);
 userRouter.get("/profile", authGuard, userProfile);
+userRouter.get("/",  users);
 
 // app.get("/user", (req, res) => {
 // 	res.status(200).send({

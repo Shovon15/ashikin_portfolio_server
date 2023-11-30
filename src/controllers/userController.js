@@ -73,8 +73,24 @@ const userProfile = async (req, res, next) => {
 		next(error);
 	}
 };
+const users = async (req, res, next) => {
+	try {
+		let user = await User.find();
+
+		return successResponse(res, {
+			statusCode: 201,
+			message: `user profile return successfully`,
+			payload: {
+				user,
+			},
+		});
+	} catch (error) {
+		next(error);
+	}
+};
 
 module.exports = {
+	users,
 	userLogin,
 	userProfile,
 };

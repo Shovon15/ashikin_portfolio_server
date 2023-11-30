@@ -26,9 +26,9 @@ app.use(express.static("public"));
 // app.use("/public", express.static(__dirname + "/public"));
 // app.use('/public/images',express.static(__dirname + '/public/images'));
 
-app.use("/api/admin", userRouter);
-app.use("/api/events", eventRouter);
-app.use("/api/blogs", blogRouter);
+// app.use("/api/admin", userRouter);
+// app.use("/api/events", eventRouter);
+// app.use("/api/blogs", blogRouter);
 app.use("/api/seed", seedRouter);
 
 app.get("/", (req, res) => {
