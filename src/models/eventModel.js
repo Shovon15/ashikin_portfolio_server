@@ -6,17 +6,25 @@ const eventSchema = new Schema(
 			type: String,
 			required: [true, "title is required"],
 		},
-		content: {
+		eventType: {
 			type: String,
-			required: [true, "text content is required"],
+			required: [true, "Event type is required"],
+		},
+		cover: {
+			type: String,
+			required: [true, "cover image is required"],
 		},
 		dateTime: {
 			type: String,
 			required: [true, "date and time is required"],
 		},
-		cover: {
+		content: {
 			type: String,
-			required: [true, "cover image is required"],
+			required: [true, "Text content is required"],
+		},
+		isPublished: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	{
