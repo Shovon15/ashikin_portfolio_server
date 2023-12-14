@@ -8,6 +8,7 @@ const userRouter = require("./routers/userRouter");
 const seedRouter = require("./routers/seedRouter");
 const eventRouter = require("./routers/eventRoutes");
 const blogRouter = require("./routers/blogRouter");
+const connectDB = require("./config/db");
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.get("/demo", (req, res) => {
 		message: "demo route!!!",
 	});
 });
+connectDB();
 
 // -----------------------------------------------------
 //client error--------------------
