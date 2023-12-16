@@ -28,9 +28,17 @@ const userSchema = new Schema(
 			minLength: [6, "password should be minimum 6 charectures"],
 			set: (v) => bcrypt.hashSync(v, bcrypt.genSaltSync(10)),
 		},
+		avatar: {
+			type: String,
+			default: "https://i.ibb.co/m05PxmS/avatar.jpg",
+		},
 		isAdmin: {
 			type: Boolean,
 			default: false,
+		},
+		passwordResetToken: {
+			type: String,
+			default: "",
 		},
 	},
 	{ timestamps: true }

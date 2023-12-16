@@ -1,4 +1,5 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -15,16 +16,12 @@ const app = express();
 app.use(cors());
 // middleware--------------------
 app.use(morgan("dev"));
+app.use(cookieParser());
 
 app.use(bodyParser.json({ limit: "100mb" }));
 app.use(bodyParser.urlencoded({ limit: "100mb", extended: true }));
 
-// const publicDir = require("path").join(__dirname, "/public");
-// app.use(express.static(publicDir));
-
 app.use(express.static("public"));
-// app.use("/public", express.static(__dirname + "/public"));
-// app.use('/public/images',express.static(__dirname + '/public/images'));
 
 app.use("/api/admin", userRouter);
 app.use("/api/events", eventRouter);
