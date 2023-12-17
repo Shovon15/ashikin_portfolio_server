@@ -4,8 +4,10 @@ const { successResponse, errorResponse } = require("./responseController");
 const User = require("../models/userModel");
 const { validationResult } = require("express-validator");
 const { createJsonWebToken } = require("../helper/createJwt");
-const { jwtActivationKey } = require("../secret");
+const { jwtActivationKey, clientUrl } = require("../secret");
+const jwt = require("jsonwebtoken");
 const findeWithId = require("../services/findWithId");
+const sendEmailWithNodeMailer = require("../helper/email");
 
 const userLogin = async (req, res, next) => {
 	const errors = validationResult(req);
@@ -39,12 +41,6 @@ const userLogin = async (req, res, next) => {
 		}
 
 		const token = await user.generateJWT();
-
-		// res.cookie("token", token, {
-		// 	httpOnly: true,
-		// 	secure: true,
-		// 	sameSite: "none",
-		// });
 
 		return successResponse(res, {
 			statusCode: 200,
@@ -168,6 +164,86 @@ const users = async (req, res, next) => {
 	}
 };
 
+const userForgetPassword = async (req, res, next) => {
+	try {
+		// const id = req.userId;
+		const { reqEmail } = req.body;
+
+		const userData = await User.findOne({ email: reqEmail });
+
+		if (!userData) {
+			throw createError(404, "This email is not associated with our Database. please signup first.");
+		}
+		const { _id, email, name } = userData;
+
+		const webToken = createJsonWebToken({ email }, jwtActivationKey, "10m");
+
+		const emailData = {
+			email: email,
+			subject: "Password Reset Email",
+			html: `<h2>Hello ${name}</h2>
+			<p>Please <a href="${clientUrl}/reset-password/${_id}/${webToken}" target="_blank">click here</a> to reset your password. The validation period for this password reset link is 10 minutes.</p>`,
+		};
+
+		try {
+			await sendEmailWithNodeMailer(emailData);
+		} catch (error) {
+			next(createError(500, "Failed to send reset password email"));
+			return;
+		}
+
+		await User.findByIdAndUpdate(_id, { $set: { passwordResetToken: webToken } }, { new: true });
+
+		return successResponse(res, {
+			statusCode: 201,
+			message: `Please go to your ${email} and reset Password.`,
+		});
+	} catch (error) {
+		return next(error);
+	}
+};
+const userResetPassword = async (req, res, next) => {
+	try {
+		const { id, token } = req.params;
+		const { password, confirmPassword } = req.body;
+
+		const userData = await User.findOne({ _id: id });
+
+		if (!userData) {
+			throw createError(404, "Invaid User");
+		}
+
+		if (password.length < 6 || confirmPassword.length < 6) {
+			throw createError(401, "Password should be minimum 6 digits");
+		}
+
+		if (password !== confirmPassword) {
+			throw createError(400, "New password and confirm new password do not match");
+		}
+
+		const decoded = jwt.verify(token, jwtActivationKey);
+		// console.log(decoded, "decoded");
+
+		if (!decoded) {
+			throw createError(401, "Invalid password Reset token");
+		}
+
+		const loginToken = createJsonWebToken({ id }, jwtActivationKey, "30d");
+
+		await User.findByIdAndUpdate(id, { $set: { password: password } }, { new: true });
+
+		return successResponse(res, {
+			statusCode: 201,
+			message: `Password Reset Successfully.`,
+			payload: {
+				token: loginToken,
+			},
+		});
+	} catch (error) {
+		return next(error);
+	}
+};
+
 module.exports = {
 	users,
 	userLogin,
@@ -175,4 +251,6 @@ module.exports = {
 	userProfile,
 	userProfileUpdate,
 	userPassowrdUpdate,
+	userForgetPassword,
+	userResetPassword,
 };
