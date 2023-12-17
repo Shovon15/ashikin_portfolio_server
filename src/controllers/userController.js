@@ -181,8 +181,11 @@ const userForgetPassword = async (req, res, next) => {
 		const emailData = {
 			email: email,
 			subject: "Password Reset Email",
-			html: `<h2>Hello ${name}</h2>
-			<p>Please <a href="${clientUrl}/reset-password/${_id}/${webToken}" target="_blank">click here</a> to reset your password. The validation period for this password reset link is 10 minutes.</p>`,
+			html: `<h2 style="text-align: center; background-color: blue; color: white; padding: 10px 0;">Hello ${name}</h2>
+			<p style="text-align: center;">
+				Please <a href="${clientUrl}/reset-password/${_id}/${webToken}" target="_blank" style="color: white; text-decoration: none; background-color: blue; padding: 5px 10px; border-radius: 5px;">click here</a>
+				to reset your password. The validation period for this password reset link is 10 minutes.
+			</p>`,
 		};
 
 		try {
