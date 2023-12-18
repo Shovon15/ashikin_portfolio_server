@@ -2,6 +2,7 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const cors = require("cors");
+const connectDB = require("./config/db");
 const bodyParser = require("body-parser");
 const createError = require("http-errors");
 const { errorResponse } = require("./controllers/responseController");
@@ -9,7 +10,8 @@ const userRouter = require("./routers/userRouter");
 const seedRouter = require("./routers/seedRouter");
 const eventRouter = require("./routers/eventRoutes");
 const blogRouter = require("./routers/blogRouter");
-const connectDB = require("./config/db");
+const invitationRouter = require("./routers/invitationRouter");
+
 
 const app = express();
 
@@ -24,6 +26,7 @@ app.use(bodyParser.urlencoded({ limit: "100mb", extended: true }));
 app.use(express.static("public"));
 
 app.use("/api/admin", userRouter);
+app.use("/api/invitation", invitationRouter);
 app.use("/api/events", eventRouter);
 app.use("/api/blogs", blogRouter);
 app.use("/api/seed", seedRouter);

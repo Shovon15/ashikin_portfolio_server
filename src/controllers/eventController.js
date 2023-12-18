@@ -67,17 +67,13 @@ const deleteEventById = async (req, res, next) => {
 
 		const event = await findeWithId(Event, id);
 
-		// const userImagePath = event.cover;
-
-		// deleteImage(userImagePath);
-
 		await Event.findByIdAndDelete({
 			_id: id,
 		});
 
 		return successResponse(res, {
 			statusCode: 200,
-			message: "Event was deleted successfully!!!",
+			message: "Event was deleted successfully.",
 		});
 	} catch (error) {
 		next(error);
