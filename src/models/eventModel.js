@@ -1,3 +1,4 @@
+const { models } = require("mongoose");
 const { Schema, model } = require("mongoose");
 
 const eventSchema = new Schema(
@@ -22,6 +23,11 @@ const eventSchema = new Schema(
 			type: String,
 			required: [true, "Text content is required"],
 		},
+		register: {
+			type: Number,
+			default: 0,
+		},
+
 		isPublished: {
 			type: Boolean,
 			default: false,
@@ -31,6 +37,6 @@ const eventSchema = new Schema(
 		timestamps: true,
 	}
 );
-const Event = model("event", eventSchema);
+const Event = models.event || model("event", eventSchema);
 
 module.exports = Event;

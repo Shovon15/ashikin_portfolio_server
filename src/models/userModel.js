@@ -36,10 +36,6 @@ const userSchema = new Schema(
 			type: Boolean,
 			default: false,
 		},
-		passwordResetToken: {
-			type: String,
-			default: "",
-		},
 	},
 	{ timestamps: true }
 );

@@ -12,7 +12,6 @@ const eventRouter = require("./routers/eventRoutes");
 const blogRouter = require("./routers/blogRouter");
 const invitationRouter = require("./routers/invitationRouter");
 
-
 const app = express();
 
 app.use(cors());

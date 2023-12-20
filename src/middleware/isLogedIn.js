@@ -4,7 +4,7 @@ const { jwtActivationKey } = require("../secret");
 
 const isLogedIn = async (req, res, next) => {
 	try {
-		const token = req.params.id;
+		const token = req.params.token;
 
 		if (!token) {
 			throw createError(401, "Access Token Not Found.please Login first");

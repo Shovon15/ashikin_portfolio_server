@@ -53,6 +53,7 @@ const userLogin = async (req, res, next) => {
 		return next(error);
 	}
 };
+
 const userLogout = async (req, res, next) => {
 	try {
 		// res.clearCookie("token");
@@ -84,6 +85,7 @@ const userProfile = async (req, res, next) => {
 		return next(error);
 	}
 };
+
 const userProfileUpdate = async (req, res, next) => {
 	try {
 		const id = req.userId;
@@ -113,6 +115,7 @@ const userProfileUpdate = async (req, res, next) => {
 		return next(error);
 	}
 };
+
 const userPassowrdUpdate = async (req, res, next) => {
 	try {
 		const id = req.userId;
@@ -148,6 +151,7 @@ const userPassowrdUpdate = async (req, res, next) => {
 		return next(error);
 	}
 };
+
 const users = async (req, res, next) => {
 	try {
 		let user = await User.find();
@@ -205,6 +209,7 @@ const userForgetPassword = async (req, res, next) => {
 		return next(error);
 	}
 };
+
 const userResetPassword = async (req, res, next) => {
 	try {
 		const { id, token } = req.params;

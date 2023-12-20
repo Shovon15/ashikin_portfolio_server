@@ -134,6 +134,7 @@ const getInvitation = async (req, res, next) => {
 		next(error);
 	}
 };
+
 const getInvitationById = async (req, res, next) => {
 	try {
 		const { id } = req.params;
@@ -150,6 +151,7 @@ const getInvitationById = async (req, res, next) => {
 		next(error);
 	}
 };
+
 const deleteInvitationById = async (req, res, next) => {
 	try {
 		const { id } = req.params;
