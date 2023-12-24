@@ -10,7 +10,6 @@ const {
 	getRegisterEventByEventId,
 	deleteRegisterEvent,
 } = require("../controllers/eventController");
-const upload = require("../middleware/uploadFile");
 
 const eventRouter = express.Router();
 

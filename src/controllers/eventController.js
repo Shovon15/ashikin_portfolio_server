@@ -163,7 +163,7 @@ const updateEventById = async (req, res, next) => {
 
 		return successResponse(res, {
 			statusCode: 200,
-			message: "Event was updated successfully!!!",
+			message: "Event was updated successfully!",
 		});
 	} catch (error) {
 		next(error);
