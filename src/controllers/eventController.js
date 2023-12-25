@@ -2,7 +2,7 @@ const Event = require("../models/eventModel");
 const fs = require("fs");
 const createError = require("http-errors");
 const { successResponse } = require("./responseController");
-const findeWithId = require("../services/findWithId");
+const findWithId = require("../services/findWithId");
 const { deleteImage } = require("../helper/deleteImage");
 const Registration = require("../models/registrationModel");
 
@@ -74,7 +74,7 @@ const getEventById = async (req, res, next) => {
 		const id = req.params.id;
 		const options = {};
 
-		const data = await findeWithId(Event, id, options);
+		const data = await findWithId(Event, id, options);
 
 		return successResponse(res, {
 			statusCode: 200,
@@ -92,7 +92,7 @@ const deleteEventById = async (req, res, next) => {
 	try {
 		const id = req.params.id;
 
-		const event = await findeWithId(Event, id);
+		const event = await findWithId(Event, id);
 
 		if (!event) {
 			throw createError(404, "Event not found.");
@@ -116,7 +116,7 @@ const updateEventById = async (req, res, next) => {
 		const eventId = req.params.id;
 		const formData = req.body;
 
-		const existingEvent = await findeWithId(Event, eventId);
+		const existingEvent = await findWithId(Event, eventId);
 
 		if (!existingEvent) {
 			throw createError(404, "Event not found");
@@ -174,7 +174,7 @@ const registerEvent = async (req, res, next) => {
 	try {
 		const { firstName, lastName, whatsapp, phone, email, instituteName, accountNumber, eventId, eventTitle } =
 			req.body;
-		// const eventData = await findeWithId(Event, eventId);
+		// const eventData = await findWithId(Event, eventId);
 		if (
 			firstName ||
 			lastName ||

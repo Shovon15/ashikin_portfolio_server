@@ -2,6 +2,7 @@ const { Schema, model } = require("mongoose");
 const bcrypt = require("bcryptjs");
 const { jwtActivationKey } = require("../secret");
 const { sign } = require("jsonwebtoken");
+const { models } = require("mongoose");
 
 const userSchema = new Schema(
 	{
@@ -44,6 +45,6 @@ userSchema.methods.generateJWT = async function () {
 		expiresIn: "30d",
 	});
 };
-const User = model("user", userSchema);
+const User = models.user || model("user", userSchema);
 
 module.exports = User;

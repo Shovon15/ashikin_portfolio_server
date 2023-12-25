@@ -6,7 +6,7 @@ const { validationResult } = require("express-validator");
 const { createJsonWebToken } = require("../helper/createJwt");
 const { jwtActivationKey, clientUrl } = require("../secret");
 const jwt = require("jsonwebtoken");
-const findeWithId = require("../services/findWithId");
+const findWithId = require("../services/findWithId");
 const sendEmailWithNodeMailer = require("../helper/email");
 
 const userLogin = async (req, res, next) => {
@@ -90,7 +90,7 @@ const userProfileUpdate = async (req, res, next) => {
 	try {
 		const id = req.userId;
 		const formData = req.body;
-		const user = await findeWithId(User, id);
+		const user = await findWithId(User, id);
 
 		if (!user) {
 			throw createError(404, "User not found");
@@ -122,7 +122,7 @@ const userPassowrdUpdate = async (req, res, next) => {
 		const { oldPassword, newPassword, confirmNewPassword } = req.body;
 
 		// console.log({ oldPassword, newPassword, confirmNewPassword });
-		const user = await findeWithId(User, id);
+		const user = await findWithId(User, id);
 
 		if (!user) {
 			throw createError(404, "User not found");

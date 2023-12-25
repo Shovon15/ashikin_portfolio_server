@@ -1,7 +1,7 @@
 const createError = require("http-errors");
 const { successResponse } = require("./responseController");
 const Service = require("../models/serviceModel");
-const findeWithId = require("../services/findWithId");
+const findWithId = require("../services/findWithId");
 
 const getServices = async (req, res, next) => {
 	try {
@@ -48,7 +48,7 @@ const getPublishedServices = async (req, res, next) => {
 const getServiceByid = async (req, res, next) => {
 	try {
 		const { id } = req.params;
-		const service = await findeWithId(Service, id);
+		const service = await findWithId(Service, id);
 
 		return successResponse(res, {
 			statusCode: 200,
@@ -89,7 +89,7 @@ const updateServiceById = async (req, res, next) => {
 		const { id } = req.params;
 		const formData = req.body;
 
-		const Services = await findeWithId(Service, id);
+		const Services = await findWithId(Service, id);
 
 		if (!Services) {
 			throw createError(404, "Event not found");
@@ -121,7 +121,7 @@ const updateServiceById = async (req, res, next) => {
 
 		return successResponse(res, {
 			statusCode: 200,
-			message: "Service was updated successfully!",
+			message: "Service updated successfully!",
 		});
 	} catch (error) {
 		next(error);
@@ -132,7 +132,7 @@ const getServiceDeleteByid = async (req, res, next) => {
 	try {
 		const id = req.params.id;
 
-		const service = await findeWithId(Service, id);
+		const service = await findWithId(Service, id);
 
 		if (!service) {
 			throw createError(404, "Service not found.");
