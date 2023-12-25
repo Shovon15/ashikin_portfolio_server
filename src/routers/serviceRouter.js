@@ -12,9 +12,9 @@ const serviceRouter = express.Router();
 
 serviceRouter.get("/all", getServices);
 serviceRouter.get("/published", getPublishedServices);
-serviceRouter.get("/:id", getServiceByid);
 serviceRouter.post("/write-service", createService);
 serviceRouter.put("/update-service/:id", updateServiceById);
 serviceRouter.delete("/:id", getServiceDeleteByid);
+serviceRouter.get("/:id", getServiceByid);
 
 module.exports = serviceRouter;

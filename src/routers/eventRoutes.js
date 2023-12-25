@@ -15,10 +15,10 @@ const eventRouter = express.Router();
 
 eventRouter.get("/all", getEvents);
 eventRouter.get("/published", getPublishedEvents);
-eventRouter.get("/:id", getEventById);
 eventRouter.post("/write-event", createEvent);
 eventRouter.put("/:id", updateEventById);
 eventRouter.delete("/:id", deleteEventById);
+eventRouter.get("/:id", getEventById);
 // -------------------register events---------
 eventRouter.post("/register-event", registerEvent);
 eventRouter.get("/register-event/:id", getRegisterEventByEventId);

@@ -104,7 +104,7 @@ const deleteEventById = async (req, res, next) => {
 
 		return successResponse(res, {
 			statusCode: 200,
-			message: "Event was deleted successfully.",
+			message: "Event deleted successfully.",
 		});
 	} catch (error) {
 		next(error);
@@ -163,7 +163,7 @@ const updateEventById = async (req, res, next) => {
 
 		return successResponse(res, {
 			statusCode: 200,
-			message: "Event was updated successfully!",
+			message: "Event updated successfully!",
 		});
 	} catch (error) {
 		next(error);
