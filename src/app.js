@@ -13,6 +13,7 @@ const blogRouter = require("./routers/blogRouter");
 const invitationRouter = require("./routers/invitationRouter");
 const serviceRouter = require("./routers/serviceRouter");
 const { reviewRouter } = require("./routers/reviewRouter");
+const bannerRouter = require("./routers/bannerrouter");
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use(bodyParser.urlencoded({ limit: "100mb", extended: true }));
 app.use(express.static("public"));
 
 app.use("/api/admin", userRouter);
+app.use("/api/banner", bannerRouter);
 app.use("/api/invitation", invitationRouter);
 app.use("/api/services", serviceRouter);
 app.use("/api/events", eventRouter);
