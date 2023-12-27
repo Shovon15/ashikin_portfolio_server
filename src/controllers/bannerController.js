@@ -1,6 +1,6 @@
 const Banner = require("../models/bannerModel");
 const createError = require("http-errors");
-const { successResponse, errorResponse } = require("./responseController");
+const { successResponse } = require("./responseController");
 
 const updateBanner = async (req, res, next) => {
 	try {
