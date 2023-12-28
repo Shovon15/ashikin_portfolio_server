@@ -1,5 +1,5 @@
-const createError = require("http-errors");
-const mongoose = require("mongoose");
+import createError from "http-errors";
+import mongoose from "mongoose";
 
 const findWithId = async (Model, id, options = {}) => {
 	try {
@@ -15,4 +15,4 @@ const findWithId = async (Model, id, options = {}) => {
 	}
 };
 
-module.exports = findWithId;
+export default findWithId;

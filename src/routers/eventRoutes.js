@@ -1,27 +1,27 @@
-const express = require("express");
-const {
-	createEvent,
-	getEvents,
-	getEventById,
-	deleteEventById,
-	updateEventById,
-	getPublishedEvents,
-	registerEvent,
-	getRegisterEventByEventId,
-	deleteRegisterEvent,
-} = require("../controllers/eventController");
+// const express = require("express");
+// const {
+// 	createEvent,
+// 	getEvents,
+// 	getEventById,
+// 	deleteEventById,
+// 	updateEventById,
+// 	getPublishedEvents,
+// 	registerEvent,
+// 	getRegisterEventByEventId,
+// 	deleteRegisterEvent,
+// } = require("../controllers/eventController");
 
-const eventRouter = express.Router();
+// const eventRouter = express.Router();
 
-eventRouter.get("/all", getEvents);
-eventRouter.get("/published", getPublishedEvents);
-eventRouter.post("/write-event", createEvent);
-eventRouter.put("/:id", updateEventById);
-eventRouter.delete("/:id", deleteEventById);
-eventRouter.get("/:id", getEventById);
-// -------------------register events---------
-eventRouter.post("/register-event", registerEvent);
-eventRouter.get("/register-event/:id", getRegisterEventByEventId);
-eventRouter.delete("/registered-event/:id/:eventid", deleteRegisterEvent);
+// eventRouter.get("/all", getEvents);
+// eventRouter.get("/published", getPublishedEvents);
+// eventRouter.post("/write-event", createEvent);
+// eventRouter.put("/:id", updateEventById);
+// eventRouter.delete("/:id", deleteEventById);
+// eventRouter.get("/:id", getEventById);
+// // -------------------register events---------
+// eventRouter.post("/register-event", registerEvent);
+// eventRouter.get("/register-event/:id", getRegisterEventByEventId);
+// eventRouter.delete("/registered-event/:id/:eventid", deleteRegisterEvent);
 
-module.exports = eventRouter;
+// module.exports = eventRouter;
