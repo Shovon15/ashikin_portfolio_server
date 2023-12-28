@@ -1,8 +1,8 @@
-// const express = require("express");
-// const { seedUser } = require("../controllers/seedController");
+const express = require("express");
+const { seedUser } = require("../controllers/seedController");
 
-// const seedRouter = express.Router();
+const seedRouter = express.Router();
 
-// seedRouter.get("/admin", seedUser);
+seedRouter.get("/admin", seedUser);
 
-// module.exports = seedRouter;
+module.exports = seedRouter;

@@ -2,22 +2,19 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const cors = require("cors");
-// const connectDB = require("./config/db");
 const bodyParser = require("body-parser");
 const createError = require("http-errors");
-// const userRouter = require("./routers/userRouter");
-// const seedRouter = require("./routers/seedRouter");
-// const eventRouter = require("./routers/eventRoutes");
-// const blogRouter = require("./routers/blogRouter");
-// const invitationRouter = require("./routers/invitationRouter");
-// const serviceRouter = require("./routers/serviceRouter");
-// const { reviewRouter } = require("./routers/reviewRouter");
-// import bannerRouter from "./routers/bannerRoutes";
-// import connectDB from "./config/db";
-// import { errorResponse } from "./controllers/responseController";
+
 const { errorResponse } = require("./controllers/responseController");
 const connectDB = require("./config/db");
 const bannerRouter = require("./routers/bannerRoutes");
+const reviewRouter = require("./routers/reviewRouter");
+const seedRouter = require("./routers/seedRouter");
+const blogRouter = require("./routers/blogRouter");
+const eventRouter = require("./routers/eventRoutes");
+const serviceRouter = require("./routers/serviceRouter");
+const invitationRouter = require("./routers/invitationRouter");
+const userRouter = require("./routers/userRouter");
 
 const app = express();
 
@@ -31,14 +28,14 @@ app.use(bodyParser.urlencoded({ limit: "100mb", extended: true }));
 
 app.use(express.static("public"));
 
-// app.use("/api/admin", userRouter);
+app.use("/api/admin", userRouter);
 app.use("/api/banner", bannerRouter);
-// app.use("/api/invitation", invitationRouter);
-// app.use("/api/services", serviceRouter);
-// app.use("/api/events", eventRouter);
-// app.use("/api/blogs", blogRouter);
-// app.use("/api/reviews", reviewRouter);
-// app.use("/api/seed", seedRouter);
+app.use("/api/invitation", invitationRouter);
+app.use("/api/services", serviceRouter);
+app.use("/api/events", eventRouter);
+app.use("/api/blogs", blogRouter);
+app.use("/api/reviews", reviewRouter);
+app.use("/api/seed", seedRouter);
 
 app.get("/", (req, res) => {
 	res.status(200).send({
