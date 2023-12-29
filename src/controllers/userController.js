@@ -9,6 +9,43 @@ const jwt = require("jsonwebtoken");
 const findWithId = require("../services/findWithId");
 const sendEmailWithNodeMailer = require("../helper/email");
 
+const userSignup = async (req, res, next) => {
+	const { name, email, password } = req.body;
+
+	try {
+		const usersInDb = await User.find();
+		if (usersInDb.length > 0) {
+			throw createError(400, "Admin already exist, cannot create a new admin");
+		}
+
+		if (!name || !email || !password) {
+			throw createError(404, "all field is required");
+		}
+
+		if (password.length < 6) {
+			throw createError(404, "password should be minimum 6 charecter");
+		}
+
+		const newUser = await User.create({
+			name,
+			email,
+			password,
+		});
+
+		const token = await newUser.generateJWT();
+
+		return successResponse(res, {
+			statusCode: 200,
+			message: "Admin created successfully",
+			payload: {
+				token,
+			},
+		});
+	} catch (error) {
+		return next(error);
+	}
+};
+
 const userLogin = async (req, res, next) => {
 	const errors = validationResult(req);
 
@@ -47,6 +84,22 @@ const userLogin = async (req, res, next) => {
 			message: "Login successful",
 			payload: {
 				token,
+			},
+		});
+	} catch (error) {
+		return next(error);
+	}
+};
+
+const users = async (req, res, next) => {
+	try {
+		let user = await User.find();
+
+		return successResponse(res, {
+			statusCode: 201,
+			message: `user  return successfully`,
+			payload: {
+				data: user,
 			},
 		});
 	} catch (error) {
@@ -152,22 +205,6 @@ const userPassowrdUpdate = async (req, res, next) => {
 	}
 };
 
-const users = async (req, res, next) => {
-	try {
-		let user = await User.find();
-
-		return successResponse(res, {
-			statusCode: 201,
-			message: `user profile return successfully`,
-			payload: {
-				user,
-			},
-		});
-	} catch (error) {
-		return next(error);
-	}
-};
-
 const userForgetPassword = async (req, res, next) => {
 	try {
 		// const id = req.userId;
@@ -253,6 +290,7 @@ const userResetPassword = async (req, res, next) => {
 };
 
 module.exports = {
+	userSignup,
 	users,
 	userLogin,
 	userLogout,

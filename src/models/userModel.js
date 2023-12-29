@@ -33,10 +33,6 @@ const userSchema = new Schema(
 			type: String,
 			default: "https://i.ibb.co/m05PxmS/avatar.jpg",
 		},
-		isAdmin: {
-			type: Boolean,
-			default: false,
-		},
 	},
 	{ timestamps: true }
 );

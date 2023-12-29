@@ -1,7 +1,7 @@
 const express = require("express");
 const {
+	userSignup,
 	userLogin,
-	getUserById,
 	userProfile,
 	users,
 	userLogout,
@@ -14,7 +14,7 @@ const { isLogedIn } = require("../middleware/isLogedIn");
 
 const userRouter = express.Router();
 
-// userRouter.get("/:id", getUserById);
+userRouter.post("/signup", userSignup);
 userRouter.post("/login", userLogin);
 userRouter.post("/logout", userLogout);
 userRouter.get("/:token", isLogedIn, userProfile);
