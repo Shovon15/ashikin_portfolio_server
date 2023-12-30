@@ -1,5 +1,6 @@
 const { models } = require("mongoose");
 const { Schema, model } = require("mongoose");
+const slugify = require("slugify");
 
 const eventSchema = new Schema(
 	{
@@ -27,6 +28,10 @@ const eventSchema = new Schema(
 			type: Number,
 			default: 0,
 		},
+		slug: {
+			type: String,
+			unique: true,
+		},
 
 		isPublished: {
 			type: Boolean,
@@ -37,6 +42,34 @@ const eventSchema = new Schema(
 		timestamps: true,
 	}
 );
+
+eventSchema.pre("save", async function (next) {
+	const originalSlug = slugify(this.title, {
+		replacement: "-",
+		remove: /[^\w\s]/g,
+		lower: true,
+		strict: false,
+		locale: "vi",
+		trim: true,
+	});
+
+	// Check for uniqueness
+	const slugRegex = new RegExp(`^${originalSlug}(-[0-9]+)?`);
+	const existingEvents = await this.constructor.find({
+		slug: { $regex: slugRegex },
+	});
+
+	if (existingEvents.length > 0) {
+		// If there are existing events with similar slugs, add a numerical suffix
+		this.slug = `${originalSlug}-${existingEvents.length + 1}`;
+	} else {
+		// Otherwise, use the original slug
+		this.slug = originalSlug;
+	}
+
+	next();
+});
+
 const Event = models.event || model("event", eventSchema);
 
 module.exports = Event;

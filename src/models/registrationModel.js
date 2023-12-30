@@ -32,9 +32,9 @@ const registrationSchema = new Schema(
 			type: String,
 			required: [true, "audience Number is required"],
 		},
-		eventId: {
+		eventSlug: {
 			type: String,
-			required: [true, "Event Id is required"],
+			required: [true, "Event Slug is required"],
 		},
 		eventTitle: {
 			type: String,

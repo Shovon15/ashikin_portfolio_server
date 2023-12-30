@@ -5,6 +5,7 @@ const { successResponse } = require("./responseController");
 const findWithId = require("../services/findWithId");
 const { deleteImage } = require("../helper/deleteImage");
 const Registration = require("../models/registrationModel");
+const findWithSlug = require("../services/findWithSlug");
 
 const createEvent = async (req, res, next) => {
 	try {
@@ -23,7 +24,7 @@ const createEvent = async (req, res, next) => {
 
 		return successResponse(res, {
 			statusCode: 200,
-			message: "Event Created Successfully.",
+			message: "program Created Successfully.",
 		});
 	} catch (error) {
 		next(error);
@@ -35,7 +36,7 @@ const getEvents = async (req, res, next) => {
 		const data = await Event.find();
 		return successResponse(res, {
 			statusCode: 200,
-			message: "Get Event  Successfully!!!",
+			message: "Get program  Successfully!!!",
 			payload: {
 				data,
 			},
@@ -52,14 +53,14 @@ const getPublishedEvents = async (req, res, next) => {
 		if (data.length === 0) {
 			return successResponse(res, {
 				statusCode: 200,
-				message: "No Published Event found",
+				message: "No Published program found",
 				payload: { data },
 			});
 		}
 
 		return successResponse(res, {
 			statusCode: 200,
-			message: "Get Published Event Successfully",
+			message: "Get Published program Successfully",
 			payload: {
 				data,
 			},
@@ -69,16 +70,15 @@ const getPublishedEvents = async (req, res, next) => {
 	}
 };
 
-const getEventById = async (req, res, next) => {
+const getEventBySlug = async (req, res, next) => {
 	try {
-		const id = req.params.id;
-		const options = {};
+		const { slug } = req.params;
 
-		const data = await findWithId(Event, id, options);
+		const data = await findWithSlug(Event, slug);
 
 		return successResponse(res, {
 			statusCode: 200,
-			message: "event were return successfully!!!",
+			message: "program were return successfully!!!",
 			payload: {
 				data,
 			},
@@ -88,35 +88,35 @@ const getEventById = async (req, res, next) => {
 	}
 };
 
-const deleteEventById = async (req, res, next) => {
+const deleteEventBySlug = async (req, res, next) => {
 	try {
-		const id = req.params.id;
+		const { slug } = req.params;
 
-		const event = await findWithId(Event, id);
+		const event = await findWithSlug(Event, slug);
 
 		if (!event) {
 			throw createError(404, "Event not found.");
 		}
 
-		await Event.findByIdAndDelete(id);
+		await Event.findOneAndDelete(slug);
 
-		await Registration.deleteMany({ eventId: id });
+		await Registration.deleteMany({ eventSlug: slug });
 
 		return successResponse(res, {
 			statusCode: 200,
-			message: "Event deleted successfully.",
+			message: "program deleted successfully.",
 		});
 	} catch (error) {
 		next(error);
 	}
 };
 
-const updateEventById = async (req, res, next) => {
+const updateEventBySlug = async (req, res, next) => {
 	try {
-		const eventId = req.params.id;
+		const { slug } = req.params;
 		const formData = req.body;
 
-		const existingEvent = await findWithId(Event, eventId);
+		const existingEvent = await findWithSlug(Event, slug);
 
 		if (!existingEvent) {
 			throw createError(404, "Event not found");
@@ -159,11 +159,10 @@ const updateEventById = async (req, res, next) => {
 			updateFields.content = formData.content;
 		}
 
-		await Event.findByIdAndUpdate(eventId, { $set: updateFields }, { new: true });
-
+		const updatedEvent = await Event.findOneAndUpdate({ slug }, { $set: updateFields }, { new: true });
 		return successResponse(res, {
 			statusCode: 200,
-			message: "Event updated successfully!",
+			message: "program updated successfully!",
 		});
 	} catch (error) {
 		next(error);
@@ -172,7 +171,7 @@ const updateEventById = async (req, res, next) => {
 
 const registerEvent = async (req, res, next) => {
 	try {
-		const { firstName, lastName, whatsapp, phone, email, instituteName, accountNumber, eventId, eventTitle } =
+		const { firstName, lastName, whatsapp, phone, email, instituteName, accountNumber, eventSlug, eventTitle } =
 			req.body;
 		// const eventData = await findWithId(Event, eventId);
 		if (
@@ -183,7 +182,7 @@ const registerEvent = async (req, res, next) => {
 			email ||
 			instituteName ||
 			accountNumber ||
-			eventId ||
+			eventSlug ||
 			eventTitle
 		) {
 			const eventInstance = await Registration.create({
@@ -194,32 +193,31 @@ const registerEvent = async (req, res, next) => {
 				email,
 				instituteName,
 				accountNumber,
-				eventId,
+				eventSlug,
 				eventTitle,
 			});
-			await Event.updateOne({ _id: eventId }, { $inc: { register: 1 } });
+			await Event.updateOne({ slug: eventSlug }, { $inc: { register: 1 } });
 		}
 
 		return successResponse(res, {
 			statusCode: 200,
-			message: "Event Registered Successfully.",
-			payload: {},
+			message: "Program Registered Successfully.",
 		});
 	} catch (error) {
 		next(error);
 	}
 };
 
-const getRegisterEventByEventId = async (req, res, next) => {
+const getRegisterEventByEventSlug = async (req, res, next) => {
 	try {
-		const { id } = req.params;
+		const { slug } = req.params;
 
-		const eventData = await Event.find({ _id: id });
-		const registeredEvent = await Registration.find({ eventId: id });
+		const eventData = await Event.find({ slug: slug });
+		const registeredEvent = await Registration.find({ eventSlug: slug });
 
 		return successResponse(res, {
 			statusCode: 200,
-			message: "get Registered Event by Events Successfully.",
+			message: "get Registered program Successfully.",
 
 			payload: {
 				registeredEvent,
@@ -233,9 +231,9 @@ const getRegisterEventByEventId = async (req, res, next) => {
 
 const deleteRegisterEvent = async (req, res, next) => {
 	try {
-		const { id, eventid } = req.params;
+		const { id, eventslug } = req.params;
 
-		const registeredEvent = await Registration.find({ _id: id });
+		const registeredEvent = await findWithId(Registration, id);
 
 		if (!registeredEvent) {
 			//
@@ -244,11 +242,11 @@ const deleteRegisterEvent = async (req, res, next) => {
 
 		await Registration.findByIdAndDelete(id);
 
-		await Event.updateOne({ _id: eventid }, { $inc: { register: -1 } });
+		await Event.updateOne({ slug: eventslug }, { $inc: { register: -1 } });
 
 		return successResponse(res, {
 			statusCode: 200,
-			message: "Events Registration delete Successfully.",
+			message: "program Registration delete Successfully.",
 		});
 	} catch (error) {
 		next(error);
@@ -259,10 +257,10 @@ module.exports = {
 	createEvent,
 	getEvents,
 	getPublishedEvents,
-	getEventById,
-	updateEventById,
-	deleteEventById,
+	getEventBySlug,
+	updateEventBySlug,
+	deleteEventBySlug,
 	registerEvent,
-	getRegisterEventByEventId,
+	getRegisterEventByEventSlug,
 	deleteRegisterEvent,
 };

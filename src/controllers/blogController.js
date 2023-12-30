@@ -1,5 +1,6 @@
 const Blog = require("../models/blogModel");
 const findWithId = require("../services/findWithId");
+const findWithSlug = require("../services/findWithSlug");
 const { successResponse } = require("./responseController");
 
 const getBlogs = async (req, res, next) => {
@@ -33,11 +34,11 @@ const getPublishedBlogs = async (req, res, next) => {
 	}
 };
 
-const getBlogById = async (req, res, next) => {
+const getBlogBySlug = async (req, res, next) => {
 	try {
-		const { id } = req.params;
+		const { slug } = req.params;
 
-		const data = await findWithId(Blog, id);
+		const data = await findWithSlug(Blog, slug);
 
 		return successResponse(res, {
 			statusCode: 200,
@@ -72,12 +73,12 @@ const createBlog = async (req, res, next) => {
 	}
 };
 
-const updateBlogById = async (req, res, next) => {
+const updateBlogBySlug = async (req, res, next) => {
 	try {
-		const { id } = req.params;
+		const { slug } = req.params;
 		const formData = req.body;
 
-		const existingBlog = await findWithId(Blog, id);
+		const existingBlog = await findWithSlug(Blog, slug);
 
 		if (!existingBlog) {
 			throw createError(404, "Blog not found");
@@ -101,7 +102,7 @@ const updateBlogById = async (req, res, next) => {
 			updateFields.content = formData.content;
 		}
 
-		await Blog.findByIdAndUpdate(id, { $set: updateFields }, { new: true });
+		await Blog.findOneAndUpdate({ slug }, { $set: updateFields }, { new: true });
 
 		return successResponse(res, {
 			statusCode: 200,
@@ -136,8 +137,8 @@ const deleteBlogById = async (req, res, next) => {
 module.exports = {
 	getBlogs,
 	getPublishedBlogs,
-	getBlogById,
+	getBlogBySlug,
 	createBlog,
-	updateBlogById,
+	updateBlogBySlug,
 	deleteBlogById,
 };

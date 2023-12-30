@@ -4,9 +4,9 @@ const {
 	getBlogs,
 	getPublishedBlogs,
 	createBlog,
-	updateBlogById,
+	updateBlogBySlug,
 	deleteBlogById,
-	getBlogById,
+	getBlogBySlug,
 } = require("../controllers/blogController");
 
 const blogRouter = express.Router();
@@ -14,8 +14,8 @@ const blogRouter = express.Router();
 blogRouter.get("/all", getBlogs);
 blogRouter.get("/published", getPublishedBlogs);
 blogRouter.post("/write-blog", createBlog);
-blogRouter.put("/:id", updateBlogById);
+blogRouter.put("/:slug", updateBlogBySlug);
 blogRouter.delete("/:id", deleteBlogById);
-blogRouter.get("/:id", getBlogById);
+blogRouter.get("/:slug", getBlogBySlug);
 
 module.exports = blogRouter;
