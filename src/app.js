@@ -15,6 +15,7 @@ const eventRouter = require("./routers/eventRoutes");
 const serviceRouter = require("./routers/serviceRouter");
 const invitationRouter = require("./routers/invitationRouter");
 const userRouter = require("./routers/userRouter");
+const logoRouter = require("./routers/logoRoutes");
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use("/api/services", serviceRouter);
 app.use("/api/events", eventRouter);
 app.use("/api/blogs", blogRouter);
 app.use("/api/reviews", reviewRouter);
+app.use("/api/logo", logoRouter);
 // app.use("/api/seed", seedRouter);
 
 app.get("/", (req, res) => {
