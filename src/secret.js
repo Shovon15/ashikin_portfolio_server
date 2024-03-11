@@ -7,6 +7,10 @@ const smtpUserName = process.env.SMTP_USERNAME;
 const smtpPassword = process.env.SMTP_PASSWORD;
 const clientUrl = process.env.CLIENT_URL;
 
+const cloudName = process.env.CLOUD_NAME;
+const cloudApiKey = process.env.CLOUD_API_KEY;
+const cloudApiSecret = process.env.CLOUD_API_SECRET;
+
 module.exports = {
 	serverPort,
 	mongoDB,
@@ -14,4 +18,7 @@ module.exports = {
 	smtpUserName,
 	smtpPassword,
 	clientUrl,
+	cloudName,
+	cloudApiKey,
+	cloudApiSecret,
 };

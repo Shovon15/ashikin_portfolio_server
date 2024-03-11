@@ -89,26 +89,29 @@ const getEventBySlug = async (req, res, next) => {
 };
 
 const deleteEventBySlug = async (req, res, next) => {
-	try {
-		const { slug } = req.params;
+    try {
+        const { slug } = req.params;
 
-		const event = await findWithSlug(Event, slug);
+        const event = await findWithSlug(Event, slug);
 
-		if (!event) {
-			throw createError(404, "Event not found.");
-		}
+        if (!event) {
+            throw createError(404, "Event not found.");
+        }
 
-		await Event.findOneAndDelete(slug);
+        await Event.findByIdAndDelete(event._id);
 
-		await Registration.deleteMany({ eventSlug: slug });
+        await Registration.deleteMany({ eventSlug: slug });
 
-		return successResponse(res, {
-			statusCode: 200,
-			message: "program deleted successfully.",
-		});
-	} catch (error) {
-		next(error);
-	}
+        return successResponse(res, {
+            statusCode: 200,
+            message: "Program deleted successfully.",
+            payload: {
+                event,
+            },
+        });
+    } catch (error) {
+        next(error);
+    }
 };
 
 const updateEventBySlug = async (req, res, next) => {
