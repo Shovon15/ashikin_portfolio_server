@@ -34,7 +34,7 @@ const updateSocial = async (req, res, next) => {
 		if (formData.isPublished !== undefined) {
 			updateFields.isPublished = !ExistingSocialData.isPublished;
 		}
-	
+
 		if (req.file?.path) {
 			const logoLocalPath = req.file.path;
 
@@ -42,8 +42,8 @@ const updateSocial = async (req, res, next) => {
 				throw createError(400, "social logo file is required");
 			}
 
-			const logo = await uploadOnCloudinary(logoLocalPath);
-			
+			const logo = await uploadOnCloudinary(logoLocalPath, 150, 50);
+
 			if (!logo) {
 				throw createError(400, "error while upload image");
 			}
@@ -117,7 +117,7 @@ const createSocial = async (req, res, next) => {
 			throw createError(400, "social logo file is required");
 		}
 
-		const logo = await uploadOnCloudinary(logoLocalPath);
+		const logo = await uploadOnCloudinary(logoLocalPath, 150, 50);
 		// console.log(avatar, "avatar");
 
 		if (!logo) {

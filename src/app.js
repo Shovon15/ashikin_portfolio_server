@@ -17,6 +17,7 @@ const invitationRouter = require("./routers/invitationRouter");
 const userRouter = require("./routers/userRouter");
 const logoRouter = require("./routers/logoRoutes");
 const socialRouter = require("./routers/socialRoutes");
+const brandRouter = require("./routers/brandRoutes");
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use("/api/blogs", blogRouter);
 app.use("/api/reviews", reviewRouter);
 app.use("/api/logo", logoRouter);
 app.use("/api/social", socialRouter);
+app.use("/api/brands", brandRouter);
 // app.use("/api/seed", seedRouter);
 
 app.get("/", (req, res) => {

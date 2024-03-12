@@ -1,4 +1,3 @@
-const Banner = require("../models/bannerModel");
 const createError = require("http-errors");
 const { successResponse } = require("./responseController");
 const Logo = require("../models/logoModel");
@@ -12,17 +11,6 @@ const updateLogo = async (req, res, next) => {
 		if (formData.logoImage !== undefined) {
 			updateFields.logoImage = formData.logoImage;
 		}
-
-		// if (formData.bannerText !== undefined) {
-		// 	updateFields.bannerText = formData.bannerText;
-		// }
-
-		// if (formData.backgroundImage !== undefined) {
-		// 	updateFields.backgroundImage = formData.backgroundImage;
-		// }
-		// if (formData.portfolioImage !== undefined) {
-		// 	updateFields.portfolioImage = formData.portfolioImage;
-		// }
 
 		const updatedLogo = await Logo.findOneAndUpdate({}, { $set: updateFields }, { new: true });
 
