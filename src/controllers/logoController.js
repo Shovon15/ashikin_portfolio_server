@@ -1,22 +1,26 @@
 const createError = require("http-errors");
 const { successResponse } = require("./responseController");
 const Logo = require("../models/logoModel");
+const { uploadOnCloudinary } = require("../helper/cloudinary");
 
 const updateLogo = async (req, res, next) => {
 	try {
-		const formData = req.body;
+		const logoFilePath = req.file?.path;
 
+		if (!logoFilePath) {
+			throw createError(400, "logo file is required");
+		}
+
+		const logo = await uploadOnCloudinary(logoFilePath, 200, 200);
+
+		if (!logo) {
+			throw createError(400, "error while upload image");
+		}
 		const updateFields = {};
 
-		if (formData.logoImage !== undefined) {
-			updateFields.logoImage = formData.logoImage;
-		}
+		updateFields.logoImage = logo.url;
 
 		const updatedLogo = await Logo.findOneAndUpdate({}, { $set: updateFields }, { new: true });
-
-		if (!updatedLogo) {
-			throw createError(404, "Logo image not found.");
-		}
 
 		return successResponse(res, {
 			statusCode: 200,
@@ -50,17 +54,23 @@ const getLogo = async (req, res, next) => {
 };
 const createLogo = async (req, res, next) => {
 	try {
-		const { logoImage } = req.body;
+		const logoFilePath = req.file?.path;
 
-		if (!logoImage) {
-			throw createError(404, "logo image not found.");
+		if (!logoFilePath) {
+			throw createError(400, "logo file is required");
+		}
+
+		const logo = await uploadOnCloudinary(logoFilePath, 200, 200);
+
+		if (!logo) {
+			throw createError(400, "error while upload image");
 		}
 
 		await Logo.deleteMany();
 
-		if (logoImage) {
+		if (logo) {
 			await Logo.create({
-				logoImage,
+				logoImage: logo.url,
 			});
 		}
 
