@@ -60,23 +60,26 @@ const createLogo = async (req, res, next) => {
 			throw createError(400, "logo file is required");
 		}
 
-		const logo = await uploadOnCloudinary(logoFilePath, 200, 200);
+		// const logo = await uploadOnCloudinary(logoFilePath, 200, 200);
 
-		if (!logo) {
-			throw createError(400, "error while upload image");
-		}
+		// if (!logo) {
+		// 	throw createError(400, "error while upload image");
+		// }
 
-		await Logo.deleteMany();
+		// await Logo.deleteMany();
 
-		if (logo) {
-			await Logo.create({
-				logoImage: logo.url,
-			});
-		}
+		// if (logo) {
+		// 	await Logo.create({
+		// 		logoImage: logo.url,
+		// 	});
+		// }
 
 		return successResponse(res, {
 			statusCode: 200,
 			message: "Logo successfully created",
+			payload: {
+				logoFilePath,
+			},
 		});
 	} catch (error) {
 		next(error);
