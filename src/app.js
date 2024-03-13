@@ -27,10 +27,11 @@ app.use(cors());
 app.use(morgan("dev"));
 app.use(cookieParser());
 
-app.use(bodyParser.json({ limit: "100mb" }));
-app.use(bodyParser.urlencoded({ limit: "100mb", extended: true }));
-
-app.use(express.static("../public/temp"));
+// app.use(bodyParser.json({ limit: "100mb" }));
+// app.use(bodyParser.urlencoded({ limit: "100mb", extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+// app.use(express.static("../public/temp"));
 
 app.use("/api/admin", userRouter);
 app.use("/api/banner", bannerRouter);
