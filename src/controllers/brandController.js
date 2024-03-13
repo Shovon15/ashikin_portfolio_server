@@ -81,21 +81,14 @@ const deleteBrand = async (req, res, next) => {
 };
 const createBrand = async (req, res, next) => {
 	try {
-		const brandLocalPath = req.file?.path;
+		const { brand } = req.body;
 
-		if (!brandLocalPath) {
+		if (!brand) {
 			throw createError(400, "brand logo file is required");
 		}
 
-		const logo = await uploadOnCloudinary(brandLocalPath, 150, 50);
-		// console.log(avatar, "avatar");
-
-		if (!logo) {
-			throw createError(400, "error while file uploading. try again");
-		}
-
 		await Brand.create({
-			brandLogo: logo.url,
+			brandLogo: brand,
 		});
 
 		return successResponse(res, {

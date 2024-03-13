@@ -34,22 +34,25 @@ const updateSocial = async (req, res, next) => {
 		if (formData.isPublished !== undefined) {
 			updateFields.isPublished = !ExistingSocialData.isPublished;
 		}
-
-		if (req.file?.path) {
-			const logoLocalPath = req.file.path;
-
-			if (!logoLocalPath) {
-				throw createError(400, "social logo file is required");
-			}
-
-			const logo = await uploadOnCloudinary(logoLocalPath, 150, 50);
-
-			if (!logo) {
-				throw createError(400, "error while upload image");
-			}
-
-			updateFields.logo = logo.url;
+		if (formData.logo !== undefined) {
+			updateFields.logo = formData.logo;
 		}
+
+		// if (req.file?.path) {
+		// 	const logoLocalPath = req.file.path;
+
+		// 	if (!logoLocalPath) {
+		// 		throw createError(400, "social logo file is required");
+		// 	}
+
+		// 	const logo = await uploadOnCloudinary(logoLocalPath, 150, 50);
+
+		// 	if (!logo) {
+		// 		throw createError(400, "error while upload image");
+		// 	}
+
+		// 	updateFields.logo = logo.url;
+		// }
 
 		const updatedSocial = await Social.findByIdAndUpdate(id, { $set: updateFields }, { new: true });
 
@@ -105,37 +108,17 @@ const getSocialById = async (req, res, next) => {
 
 const createSocial = async (req, res, next) => {
 	try {
-		const { name, description, socialLink } = req.body;
+		const { name, description, socialLink, logo } = req.body;
 
-		if (!(name || description || socialLink)) {
+		if (!(name || description || socialLink || logo)) {
 			throw createError(404, "all field is required.");
 		}
 
-		const logoLocalPath = req.file?.path;
-
-		if (!logoLocalPath) {
-			throw createError(400, "social logo file is required");
-		}
-
-		const logo = await uploadOnCloudinary(logoLocalPath, 150, 50);
-		// console.log(avatar, "avatar");
-
-		if (!logo) {
-			throw createError(400, "social logo file is required");
-		}
-
-		// await Logo.deleteMany();
-
-		// if (logoImage) {
-		// 	await Logo.create({
-		// 		logoImage,
-		// 	});
-		// }
 		await Social.create({
 			name,
 			description,
 			socialLink,
-			logo: logo.url,
+			logo,
 		});
 
 		return successResponse(res, {

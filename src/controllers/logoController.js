@@ -5,20 +5,15 @@ const { uploadOnCloudinary } = require("../helper/cloudinary");
 
 const updateLogo = async (req, res, next) => {
 	try {
-		const logoFilePath = req.file?.path;
+		const { logo } = req.body;
 
-		if (!logoFilePath) {
+		if (!logo) {
 			throw createError(400, "logo file is required");
 		}
 
-		const logo = await uploadOnCloudinary(logoFilePath, 200, 200);
-
-		if (!logo) {
-			throw createError(400, "error while upload image");
-		}
 		const updateFields = {};
 
-		updateFields.logoImage = logo.url;
+		updateFields.logoImage = logo;
 
 		const updatedLogo = await Logo.findOneAndUpdate({}, { $set: updateFields }, { new: true });
 
@@ -54,31 +49,25 @@ const getLogo = async (req, res, next) => {
 };
 const createLogo = async (req, res, next) => {
 	try {
-		const logoFilePath = req.file?.path;
+		const { logo } = req.body;
 
-		if (!logoFilePath) {
+		if (!logo) {
 			throw createError(400, "logo file is required");
 		}
 
-		// const logo = await uploadOnCloudinary(logoFilePath, 200, 200);
+		if (logo) {
+			await Logo.deleteMany();
 
-		// if (!logo) {
-		// 	throw createError(400, "error while upload image");
-		// }
-
-		// await Logo.deleteMany();
-
-		// if (logo) {
-		// 	await Logo.create({
-		// 		logoImage: logo.url,
-		// 	});
-		// }
+			await Logo.create({
+				logoImage: logo,
+			});
+		}
 
 		return successResponse(res, {
 			statusCode: 200,
 			message: "Logo successfully created",
 			payload: {
-				logoFilePath,
+				logo,
 			},
 		});
 	} catch (error) {
