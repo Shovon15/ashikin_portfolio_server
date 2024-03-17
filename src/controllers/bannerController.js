@@ -16,12 +16,10 @@ const updateBanner = async (req, res, next) => {
 			updateFields.bannerText = formData.bannerText;
 		}
 
-		if (formData.backgroundImage !== undefined) {
-			updateFields.backgroundImage = formData.backgroundImage;
+		if (formData.imageList !== undefined) {
+			updateFields.imageList = formData.imageList;
 		}
-		if (formData.portfolioImage !== undefined) {
-			updateFields.portfolioImage = formData.portfolioImage;
-		}
+		
 
 		const updatedBanner = await Banner.findOneAndUpdate({}, { $set: updateFields }, { new: true });
 
@@ -40,18 +38,13 @@ const updateBanner = async (req, res, next) => {
 
 const getBanner = async (req, res, next) => {
 	try {
-		const { bannerHeader, bannerText, backgroundImage, portfolioImage } = await Banner.findOne();
+		const data = await Banner.find();
 
 		return successResponse(res, {
 			statusCode: 200,
 			message: "banner return successfully!",
 			payload: {
-				data: {
-					bannerHeader,
-					bannerText,
-					backgroundImage,
-					portfolioImage,
-				},
+				data,
 			},
 		});
 	} catch (error) {
@@ -60,18 +53,18 @@ const getBanner = async (req, res, next) => {
 };
 const createBanner = async (req, res, next) => {
 	try {
-		const { bannerHeader, bannerText, backgroundImage, portfolioImage } = req.body;
+		const { bannerHeader, bannerText, imageList } = req.body;
 
 		await Banner.deleteMany();
 
-		if (bannerHeader || bannerText || backgroundImage || portfolioImage) {
-			await Banner.create({
-				bannerHeader,
-				bannerText,
-				backgroundImage,
-				portfolioImage,
-			});
+		if (!(bannerHeader || bannerText || imageList)) {
+			throw createError(404, "All Field is required.");
 		}
+		await Banner.create({
+			bannerHeader,
+			bannerText,
+			imageList,
+		});
 
 		return successResponse(res, {
 			statusCode: 200,
