@@ -8,7 +8,7 @@ const bannerSchema = new Schema(
 		},
 		bannerText: {
 			type: String,
-			requier: [true, "tbanner ext is required"],
+			requier: [true, "banner text is required"],
 		},
 		imageList: {
 			type: Array,
