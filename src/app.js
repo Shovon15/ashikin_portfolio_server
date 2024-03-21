@@ -21,6 +21,8 @@ const socialRouter = require("./routers/socialRoutes");
 const brandRouter = require("./routers/brandRoutes");
 const profileRouter = require("./routers/profileRoutes");
 const pressRoute = require("./routers/pressRoutes");
+const socialSupportRoute = require("./routers/socialSupportRoutes");
+const contactRoute = require("./routers/contactRoute");
 
 const app = express();
 
@@ -46,6 +48,8 @@ app.use("/api/social", socialRouter);
 app.use("/api/brands", brandRouter);
 app.use("/api/profile", profileRouter);
 app.use("/api/press", pressRoute);
+app.use("/api/social-support", socialSupportRoute);
+app.use("/api/contact", contactRoute);
 // app.use("/api/seed", seedRouter);
 
 app.get("/", (req, res) => {
