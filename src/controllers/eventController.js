@@ -48,13 +48,26 @@ const getEvents = async (req, res, next) => {
 
 const getPublishedEvents = async (req, res, next) => {
 	try {
-		const data = await Event.find({ isPublished: true });
+		const page = Number(req.query.page) || 1;
+		const limit = Number(req.query.limit) || 2;
+		const skip = (page - 1) * limit;
+
+		
+		const data = await Event.find({ isPublished: true }).limit(limit).skip(skip);
+		const count = await Event.find({ isPublished: true }).countDocuments();
 
 		if (data.length === 0) {
 			return successResponse(res, {
 				statusCode: 200,
 				message: "No Published program found",
-				payload: { data },
+				payload: {data,
+					pagination: {
+						totalPages: Math.ceil(count / limit),
+						currentPage: page,
+						previousPage: page - 1 > 0 ? page - 1 : null,
+						nextPage: page + 1 <= Math.ceil(count / limit) ? page + 1: null,
+					}
+				},
 			});
 		}
 
@@ -63,6 +76,12 @@ const getPublishedEvents = async (req, res, next) => {
 			message: "Get Published program Successfully",
 			payload: {
 				data,
+				pagination: {
+					totalPages: Math.ceil(count / limit),
+					currentPage: page,
+					previousPage: page - 1 > 0 ? page - 1 : null,
+					nextPage: page + 1 <= Math.ceil(count / limit) ? page + 1: null,
+				}
 			},
 		});
 	} catch (error) {
@@ -89,29 +108,29 @@ const getEventBySlug = async (req, res, next) => {
 };
 
 const deleteEventBySlug = async (req, res, next) => {
-    try {
-        const { slug } = req.params;
+	try {
+		const { slug } = req.params;
 
-        const event = await findWithSlug(Event, slug);
+		const event = await findWithSlug(Event, slug);
 
-        if (!event) {
-            throw createError(404, "Event not found.");
-        }
+		if (!event) {
+			throw createError(404, "Event not found.");
+		}
 
-        await Event.findByIdAndDelete(event._id);
+		await Event.findByIdAndDelete(event._id);
 
-        await Registration.deleteMany({ eventSlug: slug });
+		await Registration.deleteMany({ eventSlug: slug });
 
-        return successResponse(res, {
-            statusCode: 200,
-            message: "Program deleted successfully.",
-            payload: {
-                event,
-            },
-        });
-    } catch (error) {
-        next(error);
-    }
+		return successResponse(res, {
+			statusCode: 200,
+			message: "Program deleted successfully.",
+			payload: {
+				event,
+			},
+		});
+	} catch (error) {
+		next(error);
+	}
 };
 
 const updateEventBySlug = async (req, res, next) => {
