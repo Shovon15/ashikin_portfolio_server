@@ -20,13 +20,40 @@ const getBlogs = async (req, res, next) => {
 
 const getPublishedBlogs = async (req, res, next) => {
 	try {
-		const data = await Blog.find({ isPublished: true });
+		const page = Number(req.query.page) || 1;
+		const limit = Number(req.query.limit) || 8;
+		const skip = (page - 1) * limit;
 
+		
+		const data = await Blog.find({ isPublished: true }).limit(limit).skip(skip);
+		const count = await Blog.find({ isPublished: true }).countDocuments();
+
+		if (data.length === 0) {
+			return successResponse(res, {
+				statusCode: 200,
+				message: "No Published Blog found",
+				payload: {data,
+					pagination: {
+						totalPages: Math.ceil(count / limit),
+						currentPage: page,
+						previousPage: page - 1 > 0 ? page - 1 : null,
+						nextPage: page + 1 <= Math.ceil(count / limit) ? page + 1: null,
+					}
+				},
+			});
+		}
+		
 		return successResponse(res, {
 			statusCode: 200,
 			message: "Published Blog return Successfully",
 			payload: {
 				data,
+				pagination: {
+					totalPages: Math.ceil(count / limit),
+					currentPage: page,
+					previousPage: page - 1 > 0 ? page - 1 : null,
+					nextPage: page + 1 <= Math.ceil(count / limit) ? page + 1: null,
+				}
 			},
 		});
 	} catch (error) {
